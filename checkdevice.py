@@ -7,7 +7,7 @@ from email.utils import formataddr
 import subprocess
 
 # ================= 配置区 =================
-# 1. 导师手机的 MAC 地址 (小写)
+# 1. 导师手机的 MAC 地址
 TARGET_MAC = "BE:23:A8:3F:AA:B3" 
 
 # 2. 邮件发送配置
@@ -32,7 +32,7 @@ def send_warning(msg):
     message = MIMEText(msg, 'plain', 'utf-8')
     message['From'] = formataddr(["导师预警系统", SENDER_EMAIL])
     message['To'] = Header("Alert", 'utf-8')
-    message['Subject'] = Header('【防挂科预警】导师动态更新', 'utf-8')
+    message['Subject'] = Header('【导师动态更新】', 'utf-8')
 
     try:
         # 使用SMTP_SSL连接
@@ -72,13 +72,13 @@ while True:
 
     if found:
         if not is_mentor_present:
-            send_warning("📢 导师已进入 WiFi 范围！大家快回座位，该打字的打字，该看文献的看文献！")
+            send_warning("📢 导师已进入 WiFi 范围！")
             is_mentor_present = True
         last_seen_time = current_time # 刷新最后看见的时间
     else:
         # 如果超过缓冲时间没看见，认为导师走了
         if is_mentor_present and (current_time - last_seen_time) > (OFFLINE_BUFFER_MINS * 60):
-            send_warning("✅ 导师信号已消失超过15分钟，警报解除。但仍需保持警惕！")
+            send_warning("✅ 导师信号已消失超过15分钟，警报解除。")
             is_mentor_present = False
 
     time.sleep(CHECK_INTERVAL)
